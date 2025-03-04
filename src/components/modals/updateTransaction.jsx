@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import './addTransaction.scss'
+import './updateTransaction.scss'
 import Cross from '../../reusable/buttons/cross.jsx'
 import AmountInput from '../../reusable/inputs/amountInput.jsx'
 import NameInput from '../../reusable/inputs/nameInput.jsx'
@@ -17,7 +17,10 @@ function UpdateTransaction() {
     useEffect(() => {
         fetch('http://localhost:3002/0')
             .then(res => res.json())
-            .then(data => console.log(data))
+            .then(data => {
+                console.log(data.recent)
+                setPrevTrans([...data.recent])
+            })
             .catch(err => err)
     }, [])
   return (
@@ -32,17 +35,17 @@ function UpdateTransaction() {
                         <DateInput />
                         <AmountInput />
                         <CommentInput />
-                        <p className="update-trans-prev-trans">Previous Transaction</p>
+                        <p className="update-trans-prev">Previous Transaction</p>
                         <div className="update-trans-prev-trans">
                             {
                                 prevTrans.map((prevTran, index) => 
                                     <div className="update-trans-prev-rows" key={index}>
                                         <span className="update-trans-clr" style={{backgroundColor:'red'}}></span>
                                         <span className="update-trans-date-comment">
-                                            <p className="update-trans-date"></p>
-                                            <p className="update-trans-comment"></p>
+                                            <p className="update-trans-date">{ prevTran.date }</p>
+                                            <p className="update-trans-comment">Towing services</p>
                                         </span>
-                                        <span className="update-trans-amount"></span>
+                                        <span className="update-trans-amount"><span className="update-trans-currency">R{ prevTran.amountSpend }</span></span>
                                     </div>
                                 )
                             }

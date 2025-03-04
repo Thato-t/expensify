@@ -1,0 +1,45 @@
+@use '../../styles/_variable' as *;
+@use '../../styles/_mixins' as *;
+@use '../../styles/_global' as *;
+@use './addTransaction.scss' as *;
+@use '../Dashboard/dashboard.scss' as *;
+
+*,
+*::before,
+*::after{
+    @include boxSizing();
+    // outline: 2px solid red;
+}
+.update-trans-wrapper{
+    @extend .add-transaction-wrapper
+}
+.update-trans-containers{
+    border:1px solid green;
+    @include flex-space-between; 
+    gap:30px;
+}
+.update-trans-container-one{
+    border: 1px solid red;
+    width:100%;
+    padding:15px;
+}
+.update-trans-prev{
+    margin-block:15px 10px;
+    color:$lightText;
+    font-size: .8rem;
+    font-weight:200;
+}
+.update-trans-prev-trans{
+    border:1px solid green;
+}
+.update-trans-prev-rows{
+    @extend .recent-rows;
+    border-top:0.5px solid $lightPrimary;
+}
+
+
+
+.update-trans-container-two{
+    @extend .update-trans-container-one;
+    border: 1px solid yellow;
+}
