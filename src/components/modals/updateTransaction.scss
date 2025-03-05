@@ -14,12 +14,11 @@
     @extend .add-transaction-wrapper
 }
 .update-trans-containers{
-    border:1px solid green;
     @include flex-space-between; 
     gap:30px;
+    margin-bottom:20px;
 }
 .update-trans-container-one{
-    border: 1px solid red;
     width:100%;
     padding:15px;
 }
@@ -29,17 +28,63 @@
     font-size: .8rem;
     font-weight:200;
 }
-.update-trans-prev-trans{
-    border:1px solid green;
-}
 .update-trans-prev-rows{
     @extend .recent-rows;
-    border-top:0.5px solid $lightPrimary;
+    align-items: center;
+    // border-top:0.5px solid $lightPrimary;
 }
-
-
+.update-trans-clr{
+    width:30px;
+    height:30px;
+    @include flex-center();
+    align-items:center;
+    border-radius:6px;
+}
+.update-trans-date-comment{
+    margin-left:-80px;
+}
+.update-trans-date{
+    color:$lightText;
+    font-size:0.7rem;
+    font-weight:300;
+}
+.update-trans-comment{
+    font-weight:$fontWeight500;
+}
 
 .update-trans-container-two{
     @extend .update-trans-container-one;
-    border: 1px solid yellow;
+    display:flex;
+    align-items:center;
+}
+.update-prev-card{
+    width:fit-content;
+    align-content:center;
+    padding:15px;
+    margin:auto;
+    border:1px dashed $lightInputBackground;
+    border-radius: 6px;
+}
+.update-trans-card-heading{
+    display: flex;
+    width:fit-content;
+    align-items:center;
+    margin-bottom:50px;
+    gap:15px;
+}
+.update-prev-card-clr{
+    @extend .update-trans-clr;
+    width:50px;
+    height:50px;
+}
+.update-prev-statement{
+    width:fit-content;
+    margin-inline:auto;
+    margin-bottom:50px;
+    padding:15px;
+}
+.update-prev-card-amount{
+    width:fit-content;
+    margin-inline:auto;
+    font-weight:200;
 }

@@ -13,16 +13,29 @@ import TypeOfCategory from '../../reusable/typeOfCategory.jsx'
 function UpdateTransaction() {
 
     const [ prevTrans, setPrevTrans ] = useState([])
+    const [ prevImg, setPrevImg] = useState();
     
     useEffect(() => {
         fetch('http://localhost:3002/0')
             .then(res => res.json())
             .then(data => {
-                console.log(data.recent)
+                // console.log(data.recent)
                 setPrevTrans([...data.recent])
             })
             .catch(err => err)
     }, [])
+
+    useEffect(() => {
+        fetch('http://localhost:3000/Emergencies')
+            .then(res => res.json())
+            .then(data => {
+                setPrevImg(data[2].exampleEmoji)
+                console.log(prevImg)
+            })
+            .catch(err => console.log(err))
+    }, [])
+    
+
   return (
     <>
         <div className="update-trans-body">
@@ -40,12 +53,15 @@ function UpdateTransaction() {
                             {
                                 prevTrans.map((prevTran, index) => 
                                     <div className="update-trans-prev-rows" key={index}>
-                                        <span className="update-trans-clr" style={{backgroundColor:'red'}}></span>
+                                        <span className="update-trans-clr" style={{backgroundColor:'red'}}>{ prevImg }</span>
                                         <span className="update-trans-date-comment">
                                             <p className="update-trans-date">{ prevTran.date }</p>
                                             <p className="update-trans-comment">Towing services</p>
                                         </span>
-                                        <span className="update-trans-amount"><span className="update-trans-currency">R{ prevTran.amountSpend }</span></span>
+                                        <div className="update-trans-amount-currency">
+                                            <span className="update-trans-currency">R</span>
+                                            <span className="update-trans-amount">{ (prevTran.amountSpend).toFixed(2) }</span>
+                                        </div>
                                     </div>
                                 )
                             }
@@ -53,10 +69,10 @@ function UpdateTransaction() {
                     </div>
                     <div className="update-trans-container-two">
                         <div className="update-prev-card">
-                            <h1>
-                                <div className="update-prev-card-clr"></div>
+                            <h3 className="update-trans-card-heading">
+                                <div className="update-prev-card-clr" style={{ backgroundColor: 'red'}}>{ prevImg }</div>
                                 Hospital Visits
-                            </h1>
+                            </h3>
                             <p className="update-prev-statement">Was very sick so I went to see the doctor</p>
                             <p className="update-prev-card-amount">R200.00</p>
                         </div>
