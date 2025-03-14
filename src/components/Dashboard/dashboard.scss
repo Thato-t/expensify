@@ -61,6 +61,16 @@
     font-size:1.1rem;
     margin-bottom:20px;
 }
+.recent-empty-recents{
+    // border:1px solid green;
+    width:fit-content;
+    margin:auto;
+    text-align:center;
+    color:$lightInputBackground;
+    line-height:35px;
+    font-size: 0.8rem;
+    font-weight:200px;
+}
 //   FIND A WAY TO MAKE THE SCROLLBAR NOT VISISBLE
 .recent-trans{
     height:230px;
@@ -162,9 +172,17 @@
     font-size:1.3rem;
     color:$lightText;
     cursor:pointer;
+    // border:1px solid red;
+    border-radius: 6px;
+    padding:8px;
+    outline:none;
 }
 .categoryName:hover{
     color:$lightTextHover;
+}
+.dashboard-empty-transactions{
+    @extend .recent-empty-recents;
+    // margin:0;
 }
 .categoryExample{
     @extend .recent-rows;

@@ -1,135 +1,63 @@
-import React from 'react'
-import { useState, UseEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Navbar from '../../reusable/navbar/navbar.jsx'
 import './dashboard.scss'
+import useLocalStorageName from '../../utils/localStorage.jsx'
+import AddTransaction from '../modals/addTransaction.jsx'
+import UpdateTransaction from '../modals/updateTransaction.jsx'
 
 
 function Dashboard() {
-    const [recents, setRecents] = useState([
-        {
-            categoryName:'Fixed Expense',
-            categoryEmoji:'🏠',
-            emojiBgdColor:'#E3F2FD',
-            exampleName:'Rent',
-            amountLeft:2000,
-            amountLimit:2300
-        },
-        {
-            categoryName:'Fixed Expense',
-            categoryEmoji:'🚗',
-            emojiBgdColor:'#80DEEA',
-            exampleName:'Transportation',
-            amountLeft:1200,
-            amountLimit:1000
-        },
-        {
-            categoryName:' Variable Expense',
-            categoryEmoji:'🛒',
-            emojiBgdColor:'#FF8A65',
-            exampleName:'Groceries',
-            amountLeft:1500,
-            amountLimit:2000
-        },
-        {
-            categoryName:'Variable Expense',
-            categoryEmoji:'🎬',
-            emojiBgdColor:'#F8BBD0',
-            exampleName:'Entertainment',
-            amountLeft:500,
-            amountLimit:1000
-        },
-    ]); 
+    const [recents, setRecents] = useState([]); 
+    const [transactions, setTransactions] = useState([]);
+    const [ selectedOption, setSelectedOption ] = useState('fixedExpense');  
+    const values = useLocalStorageName('name');
+    const [ countriesCurrency, setCountriesCurrency ] = useState('R');
+    const [ showModal, setShowModal ] = useState(false);
+    const [ isLoading, setIsLoading ] = useState(false);
 
-    const [fixedExpenses, setFixedExpenses] = useState([
-        {
-            categoryName:'Fixed Expenses',
-            categoryEmoji:'🏠',
-            emojiBgdColor:'#E3F2FD',
-            exampleName:'Rent',
-            amountSpend:2000,
-            amountLimit:2300
-        },
-        {
-            categoryName:'Fixed Expenses',
-            categoryEmoji:'🚗',
-            emojiBgdColor:'#80DEEA',
-            exampleName:'Transportation',
-            amountSpend:1200,
-            amountLimit:1000
-        },
-        {
-            categoryName:'Fixed Expenses',
-            categoryEmoji:'💡',
-            emojiBgdColor:'#81D4FA',
-            exampleName:'Utilities',
-            amountSpend:1000,
-            amountLimit:1000
-        }
-    ]);
+    const handleSelectChange = (event) => {
+        setSelectedOption(event.target.value)
+    }
 
-    const [variableExpenses, setVariableExpense] = useState([
-        {
-            categoryName:'Variable Expenses',
-            categoryEmoji:'🛒',
-            emojiBgdColor:'#FF8A65',
-            exampleName:'Groceries',
-            amountSpend:1500,
-            amountLimit:2000
-        },
-        {
-            categoryName:'Variable Expenses',
-            categoryEmoji:'🎬',
-            emojiBgdColor:'#F8BBD0',
-            exampleName:'Entertainment',
-            amountSpend:500,
-            amountLimit:1000
-        }
-    ])
+    useEffect(() => {
+        setIsLoading(true)
+        fetch('http://localhost:3002/0')
+            .then(res => res.json())
+            .then(data => {
+                setRecents([...data.recent]);
+                setTransactions([...data.variableExpense]);
+                setIsLoading(false)
+            })
+            .catch(err => err)
+    }, [])
 
-    const [savings, setSavings] = useState([
-        {
-            categoryName:'Savings',
-            categoryEmoji:'🚨',
-            emojiBgdColor:'#FFCDD2',
-            exampleName:'Emergency Fund',
-            amountSpend:1000,
-            amountLimit:1000,
-            goal:3000
-        },
-        {
-            categoryName:'Savings',
-            categoryEmoji:'🎓',
-            emojiBgdColor:'#81DAFA',
-            exampleName:'Education Fund',
-            amountSpend:1000,
-            amountLimit:1000,
-            goal:10000
-        }
-    ])
+    const totalIncome = 5000;
+    const remainingBudget = 2000;
+    const totalExpense = 3000;
+  
 
-    const [debts, setDebts] = useState([
-        {
-            categoryName:'Debts',
-            categoryEmoji:'💳',
-            emojiBgdColor:'#FFCDD2',
-            exampleName:'Credit Card Debit',
-            amountSpend:500,
-            amountLimit:1000
-        }
-    ])
- 
+    // * styles the percentage and the progress circles
+    const getCircleColor = (totalAmount, amountSpent) => {
+        const remaining = totalAmount - amountSpent;
+        const percentage = ((remaining / totalAmount) * 100).toFixed(2);
+        if(percentage > (80).toFixed(2)) return '#F44336'
+        if(percentage > (60).toFixed(2)) return '#FF5722'
+        if(percentage > (40).toFixed(2)) return '#FFEB3B'
+        if(percentage > (20).toFixed(2)) return '#00BCD4'
+        if(percentage > (5).toFixed(2)) return '#4CAF50'
+    }
 
-    const amountLeftBgd = ['red', 'yellow', 'green'];
-    const randomIndex = Math.floor(Math.random() * amountLeftBgd.length);
-    const randomColor = amountLeftBgd[randomIndex]
+    const openModal = () => setShowModal(true)
+    const closeModal = () => setShowModal(false)   
+    
 
-
-  return (
+  return ( 
     <>  
         <div className="body">
             <Navbar className="navbar"/>
             <div className="dashboard-wrapper">
-                <h1 className="heading">Welcome <span className="username">User</span></h1>
+                <h1 className="heading">Welcome <span className="username" >{values ? values : 'Guest'} </span></h1>
+                    {/* {showModal && <AddTransaction />} */}
                 <div className="containers">
                     <div className="dashboard-containerOne">
                         {/* CARD */}
@@ -137,18 +65,20 @@ function Dashboard() {
                             <div className="firstHalf">
                                 <div className="remaining-budget">
                                     <p className="card-texts">Remaining Budget</p>
-                                    <p className="card-numbers">R2000.45</p>
+                                    <p className="card-numbers"><span className="currency">{countriesCurrency}</span>{remainingBudget}</p>
                                 </div>
-                                <div className="amount-color" style={{backgroundColor:'green'}}></div>
+                                <div className="amount-color"
+                                 style={{backgroundColor:getCircleColor(totalIncome, totalExpense)}}
+                                ></div>
                             </div>
                             <div className="secondHalf">
                                 <div className="total-income">
                                     <p className="card-texts">Total Income</p>
-                                    <p className="card-numbers">R5000.95</p>
+                                    <p className="card-numbers"><span className="currency">{countriesCurrency}</span>{totalIncome}</p>
                                 </div>
                                 <div className="total-expense">
                                     <p className="card-texts">Total Expense</p>
-                                    <p className="card-numbers">R3000.20</p>
+                                    <p className="card-numbers"><span className="currency">{countriesCurrency}</span>{totalExpense}</p>
                                 </div>
                             </div>
                         </div>
@@ -157,12 +87,22 @@ function Dashboard() {
 
                         <p className="recent">Recent</p>
                         <div className="recent-trans">
-                            {recents.map((recent, index) => 
+                            { recents.length === 0 ? 
+                            <div className="recent-empty-recents">
+                                <p className="recent-explanation-one">All your recents transactions will show up here</p>
+                                <p className="recent-explanation-two">Start with (+) to create first one</p>
+                            </div> 
+                            : isLoading ?
+                            <div className="recent-empty-recents">
+                                <p className="recent-loading-state">Loading...</p>
+                            </div>
+                            : recents.map((recent, index) => 
                                 <div className="recent-rows" key={index}>
                                     <div className="emoji-box" style={{backgroundColor: recent.emojiBgdColor}}>{recent.categoryEmoji}</div>
                                     <p className="example-name">{recent.exampleName}</p>
-                                    <p className="amount-left"><span className="currency">R</span>{(recent.amountLeft).toFixed(2)}</p>
-                                    <div className="amount-left-color" style={{backgroundColor:randomColor}}></div>
+                                    <p className="amount-left"><span className="currency">{countriesCurrency}</span>{(recent.amountLeft).toFixed(2)}</p>
+                                    <div className="amount-left-color" style={{backgroundColor:getCircleColor(recent.amountLimit, recent.amountSpend)}}
+                                    ></div>
                                 </div>
                             )}
                         </div>
@@ -179,20 +119,34 @@ function Dashboard() {
                             <div className="graphs"></div>
                         </div>
                         {/* FIND ICON FOR THE BTN */}
-                        <div className="add-expense-btn">+</div>
+                        <div className="add-expense-btn" onClick={openModal}>+</div>
+                       
                     </div>
 
                     <div className="dashboard-containerThree">
                         <div className="categories fixedCategory">
-                            <div className="categoryName">Fixed Expenses</div>
-                            {fixedExpenses.map((category, index) => 
+                            
+                            <select className="categoryName" value={selectedOption} onChange={handleSelectChange}>
+                                <option className="dashboard-categories-names" value="fixedExpense">Fixed Expenses</option>
+                                <option className="dashboard-categories-names" value="variableExpense">Variable Expenses</option>
+                                <option className="dashboard-categories-names" value="savings">Savings</option>
+                                <option className="dashboard-categories-names" value="investments">Investments</option>
+                                <option className="dashboard-categories-names" value="emergencies">Emergencies</option>
+                                <option className="dashboard-categories-names" value="debts">Debts</option>
+                                <option className="dashboard-categories-names" value="givings">Givings</option>
+                            </select>
+                            { transactions.length === 0 ? <div className="dashboard-empty-transactions">
+                                <p className="empty-transactions-explanation-one">All your transactions will show up here</p>
+                                <p className="empty-transactions-explanation-two">Start with (+) to create first one</p>
+                            </div> 
+                            : transactions.map((category, index) => 
                                 <div className="categoryExample"  key={index}>
                                     <div className="semi-category">
                                         <div className="category-emoji" 
                                             style={{backgroundColor: category.emojiBgdColor}}>{category.categoryEmoji}</div>
                                         <p className="category-example">{category.exampleName}</p>
                                         <p className="example-limit">
-                                            <span className="currency">R</span>
+                                            <span className="currency">{countriesCurrency}</span>
                                             {category.amountLimit}
                                         </p>
                                         <p className="example-amount-left">
@@ -200,7 +154,11 @@ function Dashboard() {
                                             {category.amountSpend}
                                         </p>
                                     </div>
-                                    <p className="percentage-left">{((category.amountLimit - category.amountSpend) / 100).toFixed(2)}%</p>
+                                    <p className="percentage-left" 
+                                    style={{ color: getCircleColor(category.amountLimit, category.amountSpend)}}>{
+                                    (((category.amountLimit - category.amountSpend) / category.amountLimit) * 100).toFixed(2)
+                                    }%
+                                    </p>
                                 </div>
                             )}
                         </div>

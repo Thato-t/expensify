@@ -1,20 +1,20 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import './navbar.scss'
-
 function Navbar() {
     
   return (
     <>
-        <div className="wrapper">
-            <div className="containerOne">
-                <p className="logo">Budget App</p>
+        <div className="navbar-wrapper">
+            <div className="navbar-containerOne">
+                <p className="navbar-logo">Budget App</p>
             </div>
-            <div className="containerTwo">
-                <div className="navigation">
+            <div className="navbar-containerTwo">
+                <div className="navbar-navigation">
                     <ul className="nav">
-                        <a href="#" className="nav-links"><li className="options">Home</li></a>
-                        <a href="#" className="nav-links"><li className="options">Reports</li></a>
-                        <a href="#" className="nav-links"><li className="options settings">Settings</li></a>
+                        <Link to="/" className="nav-links"><li className="options">Home</li></Link>
+                        <Link to="/reports" className="nav-links"><li className="options">Reports</li></Link>
+                        <Link to="/settings" className="nav-links"><li className="options settings">Settings</li></Link>
                     </ul>
                 </div>
             </div>

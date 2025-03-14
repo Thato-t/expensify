@@ -2,8 +2,13 @@ import React from 'react'
 import Navbar from '../../reusable/navbar/navbar.jsx'
 import '../../styles/_variable.scss'
 import './settings.scss'
+import useLocalStorageName from '../../utils/localStorage.jsx'
 
 function Settings() {
+    const values  = useLocalStorageName('name')
+    const [ removeItems ]  = useLocalStorageName('name')
+
+    // TODO make a fetch req of the flag and the currencies  
   return (
     <>
         <div className="settings-body">
@@ -32,8 +37,8 @@ function Settings() {
                     <span className="settings-theme-clr" style={{ backgroundColor: '#00f2ff'}}></span>
                 </div>
     
-                <button className="settings-delete-btn">Delete 
-                    <span className="settings-username"> User</span>
+                <button className="settings-delete-btn" onClick={removeItems}>Delete 
+                    <span className="settings-username"> {values || 'User'}</span>
                 </button>
             </div>
         </div>

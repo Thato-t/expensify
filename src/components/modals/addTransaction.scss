@@ -12,6 +12,11 @@
     font-family: Poppins;
 }
 .add-transaction-wrapper{
+    position:fixed;
+    z-index:9;
+    top:14px;
+    left:0;
+    right:0;
     background-color: $lightWrapperBackground;
     width:70%;
     margin-inline:auto;
@@ -19,6 +24,10 @@
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     padding:10px;
+    box-shadow:0px 2px 10px rgba(0, 0, 0, 0.7)
+}
+.add-transaction-wrapper::backdrop{
+    background-color:rgba(0, 0, 0, 0.5)
 }
 .add-transaction-cross-btn{
     @include flex-content-right();

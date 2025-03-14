@@ -1,18 +1,23 @@
+import Sign from "./components/Sign/Sign.jsx"
 import Dashboard from "./components/Dashboard/dashboard.jsx"
 import Report from './components/Reports/report.jsx'
 import Settings from "./components/Settings/settings.jsx"
-import AddTransaction from "./components/modals/addTransaction.jsx"
-import UpdateTransaction from './components/modals/updateTransaction.jsx'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 function App() {
 
   return (
     <>
-      {/* <Dashboard /> */}
-      {/* <Report /> */}
-      {/* <AddTransaction /> */}
-      {/* <UpdateTransaction /> */}
-      <Settings />
+      <Router>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/reports" element={<Report />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/sign" element={<Sign />} /> 
+          </Routes>
+      </Router>
+
     </>
   )
 }
