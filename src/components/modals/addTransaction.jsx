@@ -14,9 +14,12 @@ function AddTransaction() {
     const [ quote, setQuote ] = useState();
     const [ exampleCategories, setExampleCategories ] = useState([]);
     const [ category, setCategory ] = useState()
+    const [ selectOption, setSelectOption] = useState('fixedExpenses')
+    const [ isPressed, setIsPressed ] = useState(false)
 
     const randomIndex = Math.floor(Math.random() * 99)
 
+    const handleSelectChange = event => setSelectOption(event.target.value)
 
     useEffect(() => {
         fetch(`http://localhost:3001/${randomIndex}`)
@@ -26,11 +29,11 @@ function AddTransaction() {
     }, [])
 
     useEffect(() => {
-        fetch('http://localhost:3000/fixedExpenses')
+        fetch(`http://localhost:3000/${selectOption}`)
             .then(res => res.json())
             .then(data => setExampleCategories([...data]))
             .catch(err => console.log(err))
-    }, [])
+    }, [selectOption])
 
 
 
@@ -46,7 +49,7 @@ function AddTransaction() {
                 <AmountInput />
                 <CommentInput />
                 <div className="add-transaction-categories-wrapper">
-                    <select name="categories" id="add-transaction-select">
+                    <select name="categories" id="add-transaction-select" value={selectOption} onChange={handleSelectChange}>
                         <option value="fixedExpenses">Fixed Expenses</option>
                         <option value="variableExpenses">Variable Expenses</option>
                         <option value="Savings">Savings</option>
@@ -59,7 +62,8 @@ function AddTransaction() {
                 <div className="add-transaction-category-example-wrapper">
                     {
                         exampleCategories.map((category, index) => 
-                            <div key={index}>
+                            <div key={index} 
+                                onClick={() => setIsPressed(true)}>
                                 <div className="add-transaction-category-example" style={{backgroundColor: category.backgroundColor}}>
                                     <div className="add-transaction-emoji">{category.exampleEmoji}</div>
                                 </div>
@@ -67,7 +71,7 @@ function AddTransaction() {
                         )
                     }
                 </div>
-                <TypeOfCategory />
+                {isPressed &&  <TypeOfCategory />}
                 <div className="add-transaction-amount-limit">
                     <span className="add-transaction-currency">R</span>
                     <input type="number" name="amount" id="add-transaction-amount-limit-input" placeholder="200.00"/>

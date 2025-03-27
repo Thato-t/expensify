@@ -9,13 +9,15 @@ import ChartConfig from '../../utils/chartConfig.jsx';
 
 
 function Dashboard() {
+    const [ isLoadingRecents, setIsLoadingRecents ] = useState(false);
+    const [ isLoadingCategory, setIsLoadingCategory ] = useState(false);
     const [recents, setRecents] = useState([]); 
     const [transactions, setTransactions] = useState([]);
     const [ selectedOption, setSelectedOption ] = useState('fixedExpense');  
     const values = useLocalStorageName('name');
     const [ countriesCurrency, setCountriesCurrency ] = useState('R');
-    const [ isLoading, setIsLoading ] = useState(false);
     const [ graph, setGraph ] = useState('pie');
+    const [ show, setShow ] = useState(false)
     
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -24,16 +26,20 @@ function Dashboard() {
     }
 
     useEffect(() => {
-        setIsLoading(true)
+        setIsLoadingRecents(true)
+        setIsLoadingCategory(true)
         fetch('http://localhost:3002/0')
             .then(res => res.json())
             .then(data => {
                 setRecents([...data.recent]);
-                setTransactions([...data.variableExpense]);
-                setIsLoading(false)
+                setIsLoadingRecents(false)
+                setTransactions([...data[selectedOption]]);
+                setIsLoadingCategory(false)
+                console.log(data[selectedOption])
             })
             .catch(err => err)
-    }, [])
+    }, [selectedOption])
+
 
     const totalIncome = 5000;
     const remainingBudget = 2000;
@@ -51,15 +57,16 @@ function Dashboard() {
         if(percentage > (5).toFixed(2)) return '#4CAF50'
     }
 
+    const addTransactionModal = () => setShow(true)
     
 
   return ( 
     <>  
         <div className="body">
             <Navbar className="navbar"/>
+            {show && <AddTransaction />}
             <div className="dashboard-wrapper">
                 <h1 className="heading">Welcome <span className="username" >{values ? values : 'Guest'} </span></h1>
-                    {/* {showModal && <AddTransaction />} */}
                 <div className="containers">
                     <div className="dashboard-containerOne">
                         {/* CARD */}
@@ -89,7 +96,7 @@ function Dashboard() {
 
                         <p className="recent">Recent</p>
                         <div className="recent-trans">
-                            { isLoading ? 
+                            { isLoadingRecents ? 
                             <LoadingState /> 
                             : recents.length === 0 ?
                             <div className="recent-empty-recents">
@@ -125,7 +132,9 @@ function Dashboard() {
                             </div>
                         </div>
                         {/* FIND ICON FOR THE BTN */}
-                        <div className="add-expense-btn">+</div>
+                        <div className="add-expense-btn"
+                            onClick={addTransactionModal}
+                        >+</div>
                        
                     </div>
 
@@ -141,7 +150,7 @@ function Dashboard() {
                                 <option className="dashboard-categories-names" value="debts">Debts</option>
                                 <option className="dashboard-categories-names" value="givings">Givings</option>
                             </select>
-                            { isLoading ?
+                            { isLoadingCategory ?
                             <LoadingState /> 
                             : transactions.length === 0 ?
                             <div className="dashboard-empty-transactions">
@@ -173,7 +182,7 @@ function Dashboard() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>            
         </div>
     </>
   )

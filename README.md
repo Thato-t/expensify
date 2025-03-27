@@ -1,7 +1,7 @@
 # Still in production
 
 
-@use '../../styles/_variable' as *;
+<!-- @use '../../styles/_variable' as *;
 @use '../../styles/_mixins' as *;
 @use '../Dashboard/dashboard.scss' as *;
 
@@ -228,4 +228,4 @@ function Report() {
   )
 }
 
-export default Report   
+export default Report    -->

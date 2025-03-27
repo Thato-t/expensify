@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
+import { Bar, Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend, ArcElement} from 'chart.js';
 
 // Register chart components
-ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend, ArcElement );
 
 function ChartConfig() {
     const [ amounts, setAmounts ] = useState([])
@@ -32,6 +32,7 @@ function ChartConfig() {
   return (
     <>
         <Bar data={data} options={options} />
+        {/* <Pie data={data} /> */}
     </>
   )
 }
