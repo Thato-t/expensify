@@ -95,6 +95,7 @@
     align-items:center;
     justify-content: center;
     font-size:1.1rem;
+    border-radius:8px;
 }
 .example-name{
     text-align:left;
@@ -143,6 +144,10 @@
 .months{
     @include p-bgd-br();
     margin-right:30px;
+}
+.graphs{
+    margin-top:25px;
+    height:220px;
 }
 .add-expense-btn{
     width:fit-content;

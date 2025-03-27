@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react'
-import Navbar from '../../reusable/navbar/navbar.jsx'
-import './dashboard.scss'
-import useLocalStorageName from '../../utils/localStorage.jsx'
-import AddTransaction from '../modals/addTransaction.jsx'
-import UpdateTransaction from '../modals/updateTransaction.jsx'
+import { useState, useEffect } from 'react';
+import Navbar from '../../reusable/navbar/navbar.jsx';
+import './dashboard.scss';
+import useLocalStorageName from '../../utils/localStorage.jsx';
+import LoadingState from '../../reusable/loadingState.jsx';
+import AddTransaction from '../modals/addTransaction.jsx';
+import UpdateTransaction from '../modals/updateTransaction.jsx';
+import ChartConfig from '../../utils/chartConfig.jsx';
 
 
 function Dashboard() {
@@ -12,8 +14,10 @@ function Dashboard() {
     const [ selectedOption, setSelectedOption ] = useState('fixedExpense');  
     const values = useLocalStorageName('name');
     const [ countriesCurrency, setCountriesCurrency ] = useState('R');
-    const [ showModal, setShowModal ] = useState(false);
     const [ isLoading, setIsLoading ] = useState(false);
+    const [ graph, setGraph ] = useState('pie');
+    
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
     const handleSelectChange = (event) => {
         setSelectedOption(event.target.value)
@@ -36,7 +40,7 @@ function Dashboard() {
     const totalExpense = 3000;
   
 
-    // * styles the percentage and the progress circles
+    // styles the percentage and the progress circles
     const getCircleColor = (totalAmount, amountSpent) => {
         const remaining = totalAmount - amountSpent;
         const percentage = ((remaining / totalAmount) * 100).toFixed(2);
@@ -47,8 +51,6 @@ function Dashboard() {
         if(percentage > (5).toFixed(2)) return '#4CAF50'
     }
 
-    const openModal = () => setShowModal(true)
-    const closeModal = () => setShowModal(false)   
     
 
   return ( 
@@ -65,7 +67,7 @@ function Dashboard() {
                             <div className="firstHalf">
                                 <div className="remaining-budget">
                                     <p className="card-texts">Remaining Budget</p>
-                                    <p className="card-numbers"><span className="currency">{countriesCurrency}</span>{remainingBudget}</p>
+                                    <p className="card-numbers"><span className="currency">{countriesCurrency}</span>{(remainingBudget).toFixed(2)}</p>
                                 </div>
                                 <div className="amount-color"
                                  style={{backgroundColor:getCircleColor(totalIncome, totalExpense)}}
@@ -74,11 +76,11 @@ function Dashboard() {
                             <div className="secondHalf">
                                 <div className="total-income">
                                     <p className="card-texts">Total Income</p>
-                                    <p className="card-numbers"><span className="currency">{countriesCurrency}</span>{totalIncome}</p>
+                                    <p className="card-numbers"><span className="currency">{countriesCurrency}</span>{(totalIncome).toFixed(2)}</p>
                                 </div>
                                 <div className="total-expense">
                                     <p className="card-texts">Total Expense</p>
-                                    <p className="card-numbers"><span className="currency">{countriesCurrency}</span>{totalExpense}</p>
+                                    <p className="card-numbers"><span className="currency">{countriesCurrency}</span>{(totalExpense).toFixed(2)}</p>
                                 </div>
                             </div>
                         </div>
@@ -87,15 +89,13 @@ function Dashboard() {
 
                         <p className="recent">Recent</p>
                         <div className="recent-trans">
-                            { recents.length === 0 ? 
+                            { isLoading ? 
+                            <LoadingState /> 
+                            : recents.length === 0 ?
                             <div className="recent-empty-recents">
                                 <p className="recent-explanation-one">All your recents transactions will show up here</p>
                                 <p className="recent-explanation-two">Start with (+) to create first one</p>
                             </div> 
-                            : isLoading ?
-                            <div className="recent-empty-recents">
-                                <p className="recent-loading-state">Loading...</p>
-                            </div>
                             : recents.map((recent, index) => 
                                 <div className="recent-rows" key={index}>
                                     <div className="emoji-box" style={{backgroundColor: recent.emojiBgdColor}}>{recent.categoryEmoji}</div>
@@ -111,15 +111,21 @@ function Dashboard() {
                     <div className="dashboard-containerTwo">
                         <div className="graphs-wrapper">
                             <div className="types">
-                                <span className="months">January</span>
+                                <span className="months">
+                                    {months[new Date().getMonth()]}
+                                </span>
                                 {/* FIND ICON FOR PIE AND BAR GRAPHS */}
-                                <span className="type-of-graph">bar</span>
+                                <span className="type-of-graph" 
+                                    onClick={() =>  graph === 'pie' ? setGraph('bar') : setGraph('pie')}
+                                >{graph}</span>
                             </div>
                             {/* Must insert graphs */}
-                            <div className="graphs"></div>
+                            <div className="graphs">
+                                <ChartConfig />
+                            </div>
                         </div>
                         {/* FIND ICON FOR THE BTN */}
-                        <div className="add-expense-btn" onClick={openModal}>+</div>
+                        <div className="add-expense-btn">+</div>
                        
                     </div>
 
@@ -135,7 +141,10 @@ function Dashboard() {
                                 <option className="dashboard-categories-names" value="debts">Debts</option>
                                 <option className="dashboard-categories-names" value="givings">Givings</option>
                             </select>
-                            { transactions.length === 0 ? <div className="dashboard-empty-transactions">
+                            { isLoading ?
+                            <LoadingState /> 
+                            : transactions.length === 0 ?
+                            <div className="dashboard-empty-transactions">
                                 <p className="empty-transactions-explanation-one">All your transactions will show up here</p>
                                 <p className="empty-transactions-explanation-two">Start with (+) to create first one</p>
                             </div> 
