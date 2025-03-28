@@ -10,7 +10,7 @@ import Create from '../../reusable/buttons/create.jsx'
 import TypeOfCategory from '../../reusable/typeOfCategory.jsx'
 
 
-function UpdateTransaction() {
+function UpdateTransaction({ show, onClose }) {
 
     const [ prevTrans, setPrevTrans ] = useState([])
     const [ prevImg, setPrevImg] = useState();
@@ -35,12 +35,13 @@ function UpdateTransaction() {
             .catch(err => console.log(err))
     }, [])
     
+    if(!show) return null;
 
   return (
     <>
         <div className="update-trans-body">
             <div className="update-trans-wrapper">
-                <Cross />
+                <Cross onClick={onClose} />
                 <TypeOfCategory />
                 <div className="update-trans-containers">
                     <div className="update-trans-container-one">
@@ -52,7 +53,9 @@ function UpdateTransaction() {
                         <div className="update-trans-prev-trans">
                             {
                                 prevTrans.map((prevTran, index) => 
-                                    <div className="update-trans-prev-rows" key={index}>
+                                    <div className="update-trans-prev-rows"
+                                        key={index}
+                                    >
                                         <span className="update-trans-clr" style={{backgroundColor:'red'}}>{ prevImg }</span>
                                         <span className="update-trans-date-comment">
                                             <p className="update-trans-date">{ prevTran.date }</p>
@@ -78,7 +81,7 @@ function UpdateTransaction() {
                         </div>
                     </div>
                 </div>
-                <Create />
+                <Create onClick={onClose} />
             </div>
         </div>
     </>

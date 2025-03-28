@@ -17,7 +17,8 @@ function Dashboard() {
     const values = useLocalStorageName('name');
     const [ countriesCurrency, setCountriesCurrency ] = useState('R');
     const [ graph, setGraph ] = useState('pie');
-    const [ show, setShow ] = useState(false)
+    const [ showAddModal, setShowAddModal ] = useState(false)
+    const [ showUpdateModal, setShowUpdateModal ] = useState(false)
     
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -57,14 +58,20 @@ function Dashboard() {
         if(percentage > (5).toFixed(2)) return '#4CAF50'
     }
 
-    const addTransactionModal = () => setShow(true)
     
 
   return ( 
     <>  
+        {showAddModal && <AddTransaction 
+            show={showAddModal} 
+            onClose={() => setShowAddModal(false)} 
+        />}
+        {showUpdateModal && <UpdateTransaction 
+            show={showUpdateModal} 
+            onClose={() => setShowUpdateModal(false)} 
+        />}
         <div className="body">
             <Navbar className="navbar"/>
-            {show && <AddTransaction />}
             <div className="dashboard-wrapper">
                 <h1 className="heading">Welcome <span className="username" >{values ? values : 'Guest'} </span></h1>
                 <div className="containers">
@@ -104,7 +111,10 @@ function Dashboard() {
                                 <p className="recent-explanation-two">Start with (+) to create first one</p>
                             </div> 
                             : recents.map((recent, index) => 
-                                <div className="recent-rows" key={index}>
+                                <div className="recent-rows"
+                                 key={index}
+                                 onClick={() => setShowUpdateModal(true)}
+                                >
                                     <div className="emoji-box" style={{backgroundColor: recent.emojiBgdColor}}>{recent.categoryEmoji}</div>
                                     <p className="example-name">{recent.exampleName}</p>
                                     <p className="amount-left"><span className="currency">{countriesCurrency}</span>{(recent.amountLeft).toFixed(2)}</p>
@@ -133,7 +143,7 @@ function Dashboard() {
                         </div>
                         {/* FIND ICON FOR THE BTN */}
                         <div className="add-expense-btn"
-                            onClick={addTransactionModal}
+                            onClick={() => setShowAddModal(true)}
                         >+</div>
                        
                     </div>

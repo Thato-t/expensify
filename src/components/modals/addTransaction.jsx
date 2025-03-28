@@ -9,17 +9,21 @@ import Create from '../../reusable/buttons/create.jsx'
 import TypeOfCategory from '../../reusable/typeOfCategory.jsx'
 
 
-function AddTransaction() {
+function AddTransaction({ show, onClose }) {
+
 
     const [ quote, setQuote ] = useState();
     const [ exampleCategories, setExampleCategories ] = useState([]);
-    const [ category, setCategory ] = useState()
-    const [ selectOption, setSelectOption] = useState('fixedExpenses')
-    const [ isPressed, setIsPressed ] = useState(false)
+    const [ category, setCategory ] = useState();
+    const [ selectOption, setSelectOption] = useState('fixedExpenses');
+    const [ isPressed, setIsPressed ] = useState(false);
+    const [ typeOfCategory, setTypeOfCategory ] = useState();
+    const [ categoryColor, setCategoryColor ] = useState();
+    const [ isLoading, setIsLoading ] = useState(false) 
 
-    const randomIndex = Math.floor(Math.random() * 99)
+    const randomIndex = Math.floor(Math.random() * 99);
 
-    const handleSelectChange = event => setSelectOption(event.target.value)
+    const handleSelectChange = event => setSelectOption(event.target.value);
 
     useEffect(() => {
         fetch(`http://localhost:3001/${randomIndex}`)
@@ -29,20 +33,22 @@ function AddTransaction() {
     }, [])
 
     useEffect(() => {
+        setIsLoading(true)
         fetch(`http://localhost:3000/${selectOption}`)
             .then(res => res.json())
             .then(data => setExampleCategories([...data]))
             .catch(err => console.log(err))
+        setIsLoading(false)
     }, [selectOption])
 
-
+    if(!show) return null;
 
   return (
     <>
         <div className="add-transaction-body">
             <div className="add-transaction-wrapper">
                 {/* Insert a cross icon */}
-                <Cross />
+                <Cross onClick={onClose}/>
                 <p className="add-transaction-quote">'{quote}'</p>
                 <NameInput />
                 <DateInput />
@@ -61,9 +67,16 @@ function AddTransaction() {
                 </div>
                 <div className="add-transaction-category-example-wrapper">
                     {
+                        isLoading ? 
+                        <p className="add-transaction-loading-state">loading...</p> :
                         exampleCategories.map((category, index) => 
                             <div key={index} 
-                                onClick={() => setIsPressed(true)}>
+                                onClick={() => { 
+                                    setIsPressed(true)
+                                    setTypeOfCategory(category.exampleName)
+                                    setCategoryColor(category.backgroundColor)
+                                }}
+                            >
                                 <div className="add-transaction-category-example" style={{backgroundColor: category.backgroundColor}}>
                                     <div className="add-transaction-emoji">{category.exampleEmoji}</div>
                                 </div>
@@ -71,14 +84,14 @@ function AddTransaction() {
                         )
                     }
                 </div>
-                {isPressed &&  <TypeOfCategory />}
+                {isPressed &&  <TypeOfCategory text={typeOfCategory} color={categoryColor} />}
                 <div className="add-transaction-amount-limit">
                     <span className="add-transaction-currency">R</span>
-                    <input type="number" name="amount" id="add-transaction-amount-limit-input" placeholder="200.00"/>
+                    <input type="number" name="amount" id="add-transaction-amount-limit-input" placeholder="2000.00"/>
                 </div>
                 <p className="add-transaction-limit">Set Limit..</p>
-                <Create />
-                <p className="add-transaction-err-message">Transaction name required</p>
+                <Create onClick={onClose} />
+                {/* <p className="add-transaction-err-message">Transaction name required</p> */}
             </div>
         </div>
     </>

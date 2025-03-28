@@ -3,7 +3,6 @@ import Dashboard from "./components/Dashboard/dashboard.jsx"
 import Report from './components/Reports/report.jsx'
 import Settings from "./components/Settings/settings.jsx"
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
 
 function App() {
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 
 const useLocalStorageName = (key) => {
-    const [ values, setValues ] = useState('User')
+    const [ values, setValues ] = useState('')
 
     // ! set item func
     const setItems = (value) => {
@@ -17,6 +17,7 @@ const useLocalStorageName = (key) => {
     // ! remove item func
     const removeItems = () => {
         localStorage.removeItem(key);
+        setValues('')
     }
 
     return [ setItems, removeItems, values ]

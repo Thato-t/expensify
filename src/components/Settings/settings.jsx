@@ -5,8 +5,8 @@ import './settings.scss'
 import useLocalStorageName from '../../utils/localStorage.jsx'
 
 function Settings() {
-    const values  = useLocalStorageName('name')
     const [ removeItems ]  = useLocalStorageName('name')
+    const values  = useLocalStorageName('name')
 
     // TODO make a fetch req of the flag and the currencies  
   return (
@@ -38,7 +38,7 @@ function Settings() {
                 </div>
     
                 <button className="settings-delete-btn" onClick={removeItems}>Delete 
-                    <span className="settings-username"> {values || 'User'}</span>
+                    <span className="settings-username"> {values}</span>
                 </button>
             </div>
         </div>

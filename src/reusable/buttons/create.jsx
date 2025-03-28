@@ -1,9 +1,9 @@
 import React from 'react'
 
-function Create() {
+function Create({onClick}) {
   return (
     <>
-        <div className="add-transaction-btn">
+        <div className="add-transaction-btn" onClick={onClick}>
             create
         </div>
     </>

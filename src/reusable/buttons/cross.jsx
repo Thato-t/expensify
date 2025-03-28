@@ -1,9 +1,9 @@
 import React from 'react'
 
-function Cross() {
+function Cross({onClick}) {
   return (
     <>
-       <div className="add-transaction-cross-btn">
+       <div className="add-transaction-cross-btn" onClick={onClick}>
             &times;
        </div>
     </>
